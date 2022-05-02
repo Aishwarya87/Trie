@@ -1,0 +1,82 @@
+class Node:
+    def __init__(self):
+
+        self.links=[None] *26
+        self.flag= False
+
+class Trie:
+    def __init__(self):
+        self.root= Node()
+
+    def containsKey(self,node, ch):
+
+        return node.links[ord(ch)-ord('a')]!=None
+
+    def get(self, ch,node):
+        return node.links[ord(ch)-ord('a')]
+
+    def put(self, ch, newNode,node):
+
+        node.links[ord(ch)-ord('a')]=newNode
+
+
+    def setEnd(self,node):
+        node.flag=True
+
+    def isEnd(self,node):
+        return node.flag
+
+    def insert(self,word):
+
+
+        node= self.root
+
+        for i in range(len(word)):
+            if not self.containsKey(node,word[i]):
+
+                self.put(word[i],Node(),node)
+
+            node = self.get(word[i],node)
+        self.setEnd(node)
+
+    def search(self,word):
+        node=self.root
+        for i in range(len(word)):
+            if not self.containsKey(node,word[i]):
+                return False
+            node= self.get(word[i],node)
+        if self.isEnd(node):
+            return True
+        return False
+
+    def startsWith(self,prefix):
+        node=self.root
+        for i in range(len(prefix)):
+            if not self.containsKey(node,prefix[i]):
+                return False
+
+            node=self.get(prefix[i],node)
+        return True
+    def main(self):
+        n=5
+        type=[1,1,2,3,2]
+        value=["aish","warya","ais","ais","warya"]
+        trie = Trie()
+        for i in range(n):
+            if type[i]==1:
+                trie.insert(value[i])
+            elif type[i]==2:
+                if trie.search(value[i]):
+                    print("True")
+                else:
+                    print("False")
+            else:
+                if trie.startsWith(value[i]):
+                    print("True")
+                else:
+                    print("False")
+if __name__=="__main__":
+    obj= Trie()
+    obj.main()
+
+
