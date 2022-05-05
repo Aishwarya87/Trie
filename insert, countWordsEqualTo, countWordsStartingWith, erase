@@ -1,0 +1,122 @@
+class Node:
+    def __init__(self):
+
+        self.links=[None] *26
+        self.flag= False
+        self.et=0
+        self.sw=0
+
+class Trie:
+    def __init__(self):
+        self.root= Node()
+
+    def containsKey(self,node, ch):
+
+        return node.links[ord(ch)-ord('a')]!=None
+
+    def get(self, ch,node):
+        return node.links[ord(ch)-ord('a')]
+
+    def put(self, ch, newNode,node):
+
+        node.links[ord(ch)-ord('a')]=newNode
+
+
+    def setEnd(self,node):
+        node.flag=True
+
+    def isEnd(self,node):
+        return node.flag
+
+    def insert(self,word):
+
+
+        node= self.root
+
+        for i in range(len(word)):
+            if not self.containsKey(node,word[i]):
+
+                self.put(word[i],Node(),node)
+
+            node = self.get(word[i],node)
+            node.sw+=1
+
+        self.setEnd(node)
+        node.et+=1 #a new word
+
+    def search(self,word):
+        node=self.root
+        for i in range(len(word)):
+            if not self.containsKey(node,word[i]):
+                return False
+            node= self.get(word[i],node)
+        if self.isEnd(node):
+            return True
+        return False
+
+    def startsWith(self,prefix):
+        node=self.root
+        for i in range(len(prefix)):
+            if not self.containsKey(node,prefix[i]):
+                return False
+
+            node=self.get(prefix[i],node)
+        return True
+
+    def countWordsEqualTo(self,word):
+        node= self.root
+        for i in range(len(word)):
+            if not self.containsKey(node,word[i]):
+                return False
+            node=self.get(word[i],node)
+        return node.et
+
+    def countWordsStartingWith(self,word):
+        node=self.root
+        for i in range(len(word)):
+            if not self.containsKey(node,word[i]):
+                return 0
+            node=self.get(word[i],node)
+        return node.sw
+
+    def erase(self,word):
+        node=self.root
+        for i in range(len(word)):
+            #assuming word exists
+            node=self.get(word[i],node)
+            node.sw-=1
+        node.flag=0
+        node.et-=1
+    def main(self):
+        n=6
+        type=[1,1,1,5,6,2] #1:insert, 2:search,3:startsWith, 4:countWordsEqualTo
+        value=["aish","aish","warya","aish","warya","warya"]
+        trie = Trie()
+        for i in range(n):
+            if type[i]==1:
+                trie.insert(value[i])
+            elif type[i]==2:
+                if trie.search(value[i]):
+                    print("True")
+                else:
+                    print("False")
+            elif type[i]==3:
+                if trie.startsWith(value[i]):
+                    print("True")
+                else:
+                    print("False")
+            elif type[i]==4:
+                val= trie.countWordsEqualTo(value[i])
+                if val==False:
+                     print("word does not exist")
+                else:
+                    print(val)
+            elif type[i]==5:
+                print(trie.countWordsStartingWith(value[i]))
+            else:
+                trie.erase(value[i])
+if __name__=="__main__":
+    obj= Trie()
+    obj.main()
+
+
